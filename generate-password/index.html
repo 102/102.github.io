@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Password Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      div {
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <fieldset>
+        <legend>Password Generator</legend>
+        <div>
+          <label>
+            Length
+            <input type="number" name="length" value="16" />
+            <button type="button" id="length-8">8</button>
+            <button type="button" id="length-16">16</button>
+            <button type="button" id="length-32">32</button>
+            <button type="button" id="length-64">64</button>
+          </label>
+        </div>
+        <div>
+          <label>
+            Symbols
+            <select name="symbols">
+              <option value="alpha">a-zA-Z</option>
+              <option value="alphanumeric">0-9a-zA-Z</option>
+              <option value="all" selected>all</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>
+            Result
+            <input name="password" type="text" readonly="readonly" />
+          </label>
+          <button type="button" id="copy">Copy</button>
+        </div>
+        <button name="generate" autofocus="autofocus" type="button">
+          Generate
+        </button>
+      </fieldset>
+    </form>
+    <script>
+      let generateButton = document.querySelector('[name="generate"]');
+      let lengthInput = document.querySelector('[name="length"]');
+      let passwordInput = document.querySelector('[name="password"]');
+      let symbolsInput = document.querySelector(['[name="symbols"]']);
+      let copyButton = document.querySelector("#copy");
+
+      let mappers = {
+        all(code) {
+          return (code % 94) + 33;
+        },
+        alpha(code) {
+          let result = (code % 52) + 65;
+          return result > 90 && result < 97 ? result + 6 : result;
+        },
+        alphanumeric(code) {
+          let result = (code % 62) + 48;
+          if ((result > 57) & (result < 65)) {
+            result += 7;
+          }
+          if (result > 90 && result < 97) {
+            result += 6;
+          }
+          return result;
+        },
+      };
+
+      [8, 16, 32, 64].forEach((length) => {
+        document
+          .querySelector(`#length-${length}`)
+          .addEventListener("click", () => {
+            lengthInput.value = length;
+          });
+      });
+
+      generateButton.addEventListener("click", () => {
+        let length = Number.parseInt(lengthInput.value, 10);
+        let values = new Uint8Array(length);
+        crypto.getRandomValues(values);
+
+        let value = String.fromCodePoint(
+          ...Array.from(values).map(mappers[symbolsInput.value])
+        );
+
+        passwordInput.value = value;
+      });
+
+      copyButton.addEventListener("click", () => {
+        passwordInput.select();
+        passwordInput.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+      });
+    </script>
+  </body>
+</html>
