@@ -30,6 +30,7 @@
             Symbols
             <select name="symbols">
               <option value="alpha">a-zA-Z</option>
+              <option value="lowercaseAlpha">a-z</option>
               <option value="alphanumeric">0-9a-zA-Z</option>
               <option value="all" selected>all</option>
             </select>
@@ -47,58 +48,6 @@
         </button>
       </fieldset>
     </form>
-    <script>
-      let generateButton = document.querySelector('[name="generate"]');
-      let lengthInput = document.querySelector('[name="length"]');
-      let passwordInput = document.querySelector('[name="password"]');
-      let symbolsInput = document.querySelector(['[name="symbols"]']);
-      let copyButton = document.querySelector("#copy");
-
-      let mappers = {
-        all(code) {
-          return (code % 94) + 33;
-        },
-        alpha(code) {
-          let result = (code % 52) + 65;
-          return result > 90 && result < 97 ? result + 6 : result;
-        },
-        alphanumeric(code) {
-          let result = (code % 62) + 48;
-          if ((result > 57) & (result < 65)) {
-            result += 7;
-          }
-          if (result > 90 && result < 97) {
-            result += 6;
-          }
-          return result;
-        },
-      };
-
-      [8, 16, 32, 64].forEach((length) => {
-        document
-          .querySelector(`#length-${length}`)
-          .addEventListener("click", () => {
-            lengthInput.value = length;
-          });
-      });
-
-      generateButton.addEventListener("click", () => {
-        let length = Number.parseInt(lengthInput.value, 10);
-        let values = new Uint8Array(length);
-        crypto.getRandomValues(values);
-
-        let value = String.fromCodePoint(
-          ...Array.from(values).map(mappers[symbolsInput.value])
-        );
-
-        passwordInput.value = value;
-      });
-
-      copyButton.addEventListener("click", () => {
-        passwordInput.select();
-        passwordInput.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-      });
-    </script>
+    <script src="password.js" type="text/javascript"></script>
   </body>
 </html>
