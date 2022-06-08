@@ -52,8 +52,23 @@ generateButton.addEventListener("click", () => {
   passwordInput.value = value;
 });
 
+let copyButtonTextTimeout;
+
+const setCopyButtonText = (text, timeout = 750) => {
+  copyButton.innerText = text;
+
+  if (copyButtonTextTimeout) {
+    clearTimeout(copyButtonTextTimeout);
+  }
+
+  copyButtonTextTimeout = setTimeout(() => {
+    copyButton.innerText = "Copy";
+  }, timeout);
+};
+
 copyButton.addEventListener("click", () => {
-  passwordInput.select();
-  passwordInput.setSelectionRange(0, 99999);
-  document.execCommand("copy");
+  navigator.clipboard
+    .writeText(passwordInput.value)
+    .then(() => setCopyButtonText("Copied"))
+    .catch(() => setCopyButtonText("Failed to copy"));
 });
