@@ -13,6 +13,15 @@
       div {
         margin-bottom: 1rem;
       }
+      .visually-hidden {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
     </style>
   </head>
 
@@ -25,10 +34,18 @@
             <label>
               Length
               <input type="number" name="length" value="16" />
-              <button type="button" id="length-8">8</button>
-              <button type="button" id="length-16">16</button>
-              <button type="button" id="length-32">32</button>
-              <button type="button" id="length-64">64</button>
+              <button type="button" id="length-8">
+                <span class="visually-hidden">set password length to </span>8
+              </button>
+              <button type="button" id="length-16">
+                <span class="visually-hidden">set password length to </span>16
+              </button>
+              <button type="button" id="length-32">
+                <span class="visually-hidden">set password length to </span>32
+              </button>
+              <button type="button" id="length-64">
+                <span class="visually-hidden">set password length to </span>64
+              </button>
             </label>
           </div>
           <div>
